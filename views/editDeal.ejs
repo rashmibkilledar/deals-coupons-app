@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+    <div class="container my-3">
+        <h2>Update deal</h2>
+        <div class="container mt-3">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow p-2">
+                        <div class="card-body">
+                            <form action="/update-deal/<%= deal._id %>" method="post">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Title:</label>
+                                    <input type="text" class="form-control" name="title" , id="title"
+                                        value="<%= deal.title %>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4"
+                                        required><%= deal.description %></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Image:</label>
+                                    <input type="text" class="form-control" id="image" , name="image"
+                                        value="<%= deal.image %>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="originalPrice" class="form-label">Original Price:</label>
+                                    <input type="number" class="form-control" name="originalPrice"
+                                        value="<%= deal.originalPrice %>" id="originalPrice" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="discountedPrice" class="form-label">Discounted Price:</label>
+                                    <input type="number" class="form-control" name="discountedPrice"
+                                        value="<%= deal.discountedPrice %>" id="discountedPrice" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="couponCode" class="form-label">Coupon Code:</label>
+                                    <input type="text" class="form-control" name="couponCode" id="couponCode"
+                                        value="<%= deal.couponCode %>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="buyLink" class="form-label">Buy Link:</label>
+                                    <input type="text" class="form-control" name="buyLink" id="buyLink"
+                                        value="<%= deal.buyLink %>" required>
+                                </div>
+                                <div class="d-grid col-4 mx-auto">
+                                    <button class="btn btn-primary">Update Deal</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>

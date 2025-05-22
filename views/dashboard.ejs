@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+
+    <main>
+        <div class="container mt-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>Available Deals and Coupons</h3>
+                <a href="/deals" class="btn btn-success mb-3">Add New Deal</a>
+            </div>
+
+            <table class="table table-bordered table-striped">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Title</th>
+                        <!-- <th>Description</th> -->
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% deals.forEach((deal)=> { %>
+                        <tr>
+                            <td>
+                                <%= deal.title %>
+                            </td>
+                            <!-- <td>
+                                <%= deal.description %>
+                            </td> -->
+                            <td><a href="/deal-details/<%= deal._id %>">View info</a></td>
+                        </tr>
+                        <% }) %>
+
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>

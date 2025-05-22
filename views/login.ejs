@@ -1,0 +1,35 @@
+<%- include('partials/header') %>
+    <main class="flex-grow-1">
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow py-4 px-2">
+                        <div class="card-body">
+                            <% if (error_msg && error_msg.length> 0) { %>
+                                <div class="alert alert-danger">
+                                    <%= error_msg %>
+                                </div>
+                                <% } %>
+                                    <h2>Admin Login</h2>
+                                    <form action="/login" method="post">
+                                        <div class="mb-3">
+                                            <label for="username" class="form-label">Username:</label>
+                                            <input type="text" class="form-control" id="username" name="username"
+                                                maxlength="10" pattern="\d{10}"
+                                                placeholder="Enter 10 digit phone number">
+
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="pin" class="form-label">Secret PIN:</label>
+                                            <input type="password" class="form-control" id="pin" name="pin"
+                                                maxlength="4" pattern="\d{4}" placeholder="Enter 4 digit pin">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                                    </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <%- include('partials/footer') %>

@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+    <div class="container mt-5">
+        <h3>Deal Details</h3>
+        <div class="card mb-3 shadow">
+            <div class=" row g-0">
+                <div class="col-md-5 d-flex justify-content-center">
+                    <img src=" <%=deal.image %>" class="img-fluid rounded-start" alt="">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= deal.title %>
+                        </h5>
+                        <p class="card-text">
+                            <%= deal.description %>
+                        </p>
+                        <p class="card-text">
+                            <strong>Original Price: </strong>₹<%= deal.originalPrice.toLocaleString() %><br>
+                                <strong>Discounted Price: </strong>₹<%= deal.discountedPrice.toLocaleString() %><br>
+                                    <% if(deal.couponCode) { %>
+                                        <strong>Coupon Code:</strong>
+                                        <%= deal.couponCode %>
+                                            <% } %>
+                        </p>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="/edit-deal/<%= deal._id %>" class="btn btn-primary w-75">Edit</a>
+                            </div>
+                            <div class="col-6">
+                                <form action="/delete-deal/<%= deal._id %>" method="post"
+                                    onsubmit="return confirm('Are you sure you want to delete this deal?')">
+                                    <button class="btn btn-primary w-75">Delete</button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
