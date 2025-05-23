@@ -22,7 +22,7 @@ router.post('/login', passport.authenticate('local', {
 }));
 
 /* Display dashboard page for admin */
-router.get('/dashboard', isAuthenticated, async (req, res) => {
+router.get('/dashboard', checkLogin, async (req, res) => {
     try {
         const deals = await dealsModel.find();
         res.render('dashboard', { deals: deals });
@@ -34,12 +34,12 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
 });
 
 /* Display addDeal page to add new deal */
-router.get('/deals', isAuthenticated, (req, res) => {
+router.get('/deals', checkLogin, (req, res) => {
     res.render('addDeal');
 });
 
 /* Save new deal to DB and redirect to dashboard */
-router.post('/deals', isAuthenticated, async (req, res) => {
+router.post('/deals', checkLogin, async (req, res) => {
     try {
         const { title, description, image, originalPrice, discountedPrice, couponCode, buyLink } = req.body;
         console.log(title);
@@ -64,7 +64,7 @@ router.post('/deals', isAuthenticated, async (req, res) => {
 });
 
 /* Display dealDetails page, which shows details of deal and have option to edit, delete deal */
-router.get('/deal-details/:id', isAuthenticated, async (req, res) => {
+router.get('/deal-details/:id', checkLogin, async (req, res) => {
     const dealId = req.params.id;
     console.log('deal id: ', dealId);
     const deal = await dealsModel.findById(req.params.id);
@@ -72,7 +72,7 @@ router.get('/deal-details/:id', isAuthenticated, async (req, res) => {
 });
 
 /* Display editDeal page which has form to update the deal details */
-router.get('/edit-deal/:id', isAuthenticated, async (req, res) => {
+router.get('/edit-deal/:id', checkLogin, async (req, res) => {
     try {
         const dealId = req.params.id;
         const deal = await dealsModel.findById(dealId);
@@ -86,7 +86,7 @@ router.get('/edit-deal/:id', isAuthenticated, async (req, res) => {
 });
 
 /* Save the updated deal details to DB */
-router.post('/update-deal/:id', isAuthenticated, async (req, res) => {
+router.post('/update-deal/:id', checkLogin, async (req, res) => {
     try {
         const dealId = req.params.id;
         const deal = await dealsModel.findByIdAndUpdate(dealId, req.body);
@@ -99,7 +99,7 @@ router.post('/update-deal/:id', isAuthenticated, async (req, res) => {
 });
 
 /* Delete the deal from DB */
-router.post('/delete-deal/:id', isAuthenticated, async (req, res) => {
+router.post('/delete-deal/:id', checkLogin, async (req, res) => {
     try {
         const dealId = req.params.id;
         await dealsModel.findByIdAndDelete(dealId);
@@ -111,8 +111,27 @@ router.post('/delete-deal/:id', isAuthenticated, async (req, res) => {
 
 });
 
-function isAuthenticated(req, res, next) {
-    console.log('Is authenticated? ', req.isAuthenticated());
+router.get('/logout', (req, res) => {
+    req.logOut((err) => {
+        if (err) {
+            return next();
+        }
+        req.session.destroy();
+        res.redirect('/login');
+    })
+})
+
+/* custom middleware function used to protect specific routes 
+    If the user is authenticated, it calls next() to proceed to the requested route.
+    If not, it redirects to the login page. */
+function checkLogin(req, res, next) {
+    /* req.isAuthenticated()
+    this is method added by Passport.js to the req object.
+    It's built-in to Passport.
+    It returns true if the user is currently authenticated.
+    Behind the scenes, it checks whether a valid session and user info are stored. 
+    */
+    console.log('Is logged in? (authenticated?) ', req.isAuthenticated());
     if (req.isAuthenticated()) {
         return next();
     }
