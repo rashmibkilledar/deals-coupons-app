@@ -46,10 +46,21 @@ passport.use(new LocalStrategy({
 
 }));
 
+/* Passport uses sessions to keep users logged in between HTTP requests. */
+/* Serialize user ID into session */
+/* This function determines what user data should be stored in the session.
+    This gets called once after a successful login.
+    It typically stores just the user ID (or some unique identifier) for efficiency.
+    done(null, user.id) means: no error, and store this ID in session. */
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
 
+/* This function is called on every request after the session is established. 
+It uses the stored ID from the session to fetch the full user object. */
+/* Deserialize user from session ID */
+/* This allows req.admin_user to be available in routes/views.
+    It restores the full admin_user object from just the ID stored in the session. */
 passport.deserializeUser((id, done) => {
     if (id === admin_user.id) {
         done(null, admin_user);
@@ -58,8 +69,30 @@ passport.deserializeUser((id, done) => {
     }
 });
 
+/* When you log in using Passport.js, it sets information like:
+req.user → the logged-in user.
+req.isAuthenticated() → returns true if logged in.
+But by default, your EJS templates don’t know whether the user is logged in, because those values 
+(req.user, req.isAuthenticated()) are only available in the route handler, not directly in your view templates.
+So middleware adds those values to res.locals, which is automatically available in all EJS views.
+This middleware exposes req.isAuthenticated() and req.user to all views */
+app.use((req, res, next) => {
+    /* res.locals is an object provided by Express that lets to pass data from middleware or route handler 
+    to view templates (like EJS) */
+    res.locals.isAuthenticated = req.isAuthenticated();
+    res.locals.admin_user = req.admin_user;
+    next();
+});
+
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store');
+    next();
+});
+
+
 app.use(flash());
 
+/* Error handling middleware */
 app.use((req, res, next) => {
     res.locals.error_msg = req.flash('error');
     next();
